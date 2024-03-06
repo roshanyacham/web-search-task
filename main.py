@@ -12,6 +12,7 @@ class WebCrawler:
         if url in self.visited:
             return
         self.visited.add(url)
+        print(f"Crawling: {url}") # added a new feature to print the link 
 
         try:
             response = requests.get(url)
@@ -48,7 +49,7 @@ def main():
     start_url = "https://example.com"
     crawler.crawl(start_url)
 
-    keyword = "test"
+    keyword = "Domain"
     results = crawler.search(keyword)
     crawler.print_results(results)
 
