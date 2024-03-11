@@ -7,12 +7,14 @@ class WebCrawler:
     def __init__(self):
         self.index = defaultdict(list)
         self.visited = set()
+        self.session_visited = set()
 
-    def crawl(self, url, base_url=None):
-        if url in self.visited:
+    def crawl(self, url, base_url=None, depth=0, max_depth=1):
+        if url in self.visited or depth > max_depth:
             return
         self.visited.add(url)
-        print(f"Crawling: {url}") # added a new feature to print the link 
+        self.session_visited.add(url)  # Add to session visited URLs
+        print(f"Crawling: {url}")
 
         try:
             response = requests.get(url)
@@ -23,11 +25,15 @@ class WebCrawler:
                 href = link.get('href')
                 if href:
                     if urlparse(href).netloc:
-                        href = urljoin(base_url or url, href)
-                    if  href.startswith(base_url or url): #removed not to stop the loop
-                        self.crawl(href, base_url=base_url or url)
+                        absolute_url = href
+                    else:
+                        absolute_url = urljoin(base_url or url, href)
+                    if absolute_url.startswith("http"):  # Check if it's an absolute URL
+                        if absolute_url not in self.session_visited:  # Check if URL is already visited in this session
+                           self.crawl(absolute_url, base_url=base_url or url, depth=depth+1, max_depth=max_depth)
         except Exception as e:
             print(f"Error crawling {url}: {e}")
+
 
     def search(self, keyword):
         results = []
@@ -44,6 +50,7 @@ class WebCrawler:
         else:
             print("No results found.")
 
+
 def main():
     crawler = WebCrawler()
     start_url = "https://example.com"
@@ -53,3 +60,5 @@ def main():
     results = crawler.search(keyword)
     crawler.print_results(results)
 
+if __name__=="__main__":
+    main()
