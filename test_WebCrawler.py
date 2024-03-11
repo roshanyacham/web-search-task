@@ -4,6 +4,8 @@ import unittest
 
 class WebCrawlerTests(unittest.TestCase):
 
+
+
     def test_search(self):
         crawler = WebCrawler()
         crawler.index["page1"] = "This has the keyword"
@@ -71,6 +73,7 @@ class WebCrawlerTests(unittest.TestCase):
 
         results = crawler.search("   ")
         self.assertEqual(results, [])
+
 
 if __name__ == "__main__":
     unittest.main()  # Run unit tests

@@ -9,8 +9,8 @@ class WebCrawler:
         self.visited = set()
         self.session_visited = set()
 
-    def crawl(self, url, base_url=None, depth=0, max_depth=1):
-        if url in self.visited or depth > max_depth:
+    def crawl(self, url, base_url=None, depth=0, max_depth=2):
+        if url in self.visited or depth >= max_depth:
             return
         self.visited.add(url)
         self.session_visited.add(url)  # Add to session visited URLs
